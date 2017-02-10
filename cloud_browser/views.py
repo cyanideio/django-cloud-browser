@@ -71,6 +71,8 @@ def browser(request, path='', template="cloud_browser/browser.html"):
 
     # Inputs.
     container_path, object_path = path_parts(path)
+    print container_path
+    print object_path
     incoming = request.POST or request.GET or {}
 
     marker = incoming.get('marker', None)
@@ -93,7 +95,8 @@ def browser(request, path='', template="cloud_browser/browser.html"):
     #     instead going through this in-memory list.
     # TODO: Should page listed containers with a ``limit`` and ``marker``.
     conn = get_connection()
-    containers = conn.get_containers()
+    # containers = conn.get_containers()
+    containers = []
 
     marker_part = None
     container = None
@@ -103,11 +106,12 @@ def browser(request, path='', template="cloud_browser/browser.html"):
         def cont_eq(container):
             return container.name == container_path
         cont_list = list(islice(ifilter(cont_eq, containers), 1))
-        if not cont_list:
-            raise Http404("No container at: %s" % container_path)
+        # if not cont_list:
+        #     raise Http404("No container at: %s" % container_path)
 
         # Q2: Get objects for instant list, plus one to check "next".
-        container = cont_list[0]
+        # container = cont_list[0]
+        container = conn.get_container(container_path)
         objects = container.get_objects(object_path, marker, limit + 1)
         marker = None
 
@@ -117,18 +121,31 @@ def browser(request, path='', template="cloud_browser/browser.html"):
             marker = objects[-1].name
             marker_part = relpath(marker, object_path)
 
-    return render_to_response(template,
-                              {'path': path,
-                               'marker': marker,
-                               'marker_part': marker_part,
-                               'limit': limit,
-                               'breadcrumbs': _breadcrumbs(path),
-                               'container_path': container_path,
-                               'containers': containers,
-                               'container': container,
-                               'object_path': object_path,
-                               'objects': objects},
-                              context_instance=RequestContext(request))
+    from django.shortcuts import render
+    return render(request, template, {'path': path,
+        'marker': marker,
+        'marker_part': marker_part,
+        'limit': limit,
+        'breadcrumbs': _breadcrumbs(path),
+        'container_path': container_path,
+        'containers': containers,
+        'containers': containers,
+        'container': container,
+        'object_path': object_path,
+        'objects': objects})
+    # return render_to_response(template,
+    #                           {'path': path,
+    #                            'marker': marker,
+    #                            'marker_part': marker_part,
+    #                            'limit': limit,
+    #                            'breadcrumbs': _breadcrumbs(path),
+    #                            'container_path': container_path,
+    #                            'containers': containers,
+    #                            'containers': containers,
+    #                            'container': container,
+    #                            'object_path': object_path,
+    #                            'objects': objects},
+    #                           context_instance=RequestContext(request))
 
 
 @settings_view_decorator
