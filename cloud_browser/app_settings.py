@@ -197,6 +197,7 @@ class Settings(object):
         'CLOUD_BROWSER_VIEW_DECORATOR': Setting(),
 
         # Permissions lists for containers.
+        'CLOUD_BROWSER_CONTAINERS': Setting(),
         'CLOUD_BROWSER_CONTAINER_WHITELIST': Setting(),
         'CLOUD_BROWSER_CONTAINER_BLACKLIST': Setting(),
 

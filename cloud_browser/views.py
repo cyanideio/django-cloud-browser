@@ -95,8 +95,10 @@ def browser(request, path='', template="cloud_browser/browser.html"):
     #     instead going through this in-memory list.
     # TODO: Should page listed containers with a ``limit`` and ``marker``.
     conn = get_connection()
-    # containers = conn.get_containers()
-    containers = []
+    if settings.CLOUD_BROWSER_CONTAINERS:
+        containers = [conn.get_container(c) for c in settings.CLOUD_BROWSER_CONTAINERS]
+    else: 
+        containers = conn.get_containers()
 
     marker_part = None
     container = None
@@ -110,8 +112,7 @@ def browser(request, path='', template="cloud_browser/browser.html"):
         #     raise Http404("No container at: %s" % container_path)
 
         # Q2: Get objects for instant list, plus one to check "next".
-        # container = cont_list[0]
-        container = conn.get_container(container_path)
+        container = cont_list[0]
         objects = container.get_objects(object_path, marker, limit + 1)
         marker = None
 
@@ -129,24 +130,9 @@ def browser(request, path='', template="cloud_browser/browser.html"):
         'breadcrumbs': _breadcrumbs(path),
         'container_path': container_path,
         'containers': containers,
-        'containers': containers,
         'container': container,
         'object_path': object_path,
         'objects': objects})
-    # return render_to_response(template,
-    #                           {'path': path,
-    #                            'marker': marker,
-    #                            'marker_part': marker_part,
-    #                            'limit': limit,
-    #                            'breadcrumbs': _breadcrumbs(path),
-    #                            'container_path': container_path,
-    #                            'containers': containers,
-    #                            'containers': containers,
-    #                            'container': container,
-    #                            'object_path': object_path,
-    #                            'objects': objects},
-    #                           context_instance=RequestContext(request))
-
 
 @settings_view_decorator
 def document(_, path=''):
