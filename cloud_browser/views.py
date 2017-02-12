@@ -1,7 +1,7 @@
 """Cloud browser views."""
 from django.http import HttpResponse, Http404
-from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.shortcuts import render
 
 try:
     from django.utils.importlib import import_module
@@ -122,7 +122,6 @@ def browser(request, path='', template="cloud_browser/browser.html"):
             marker = objects[-1].name
             marker_part = relpath(marker, object_path)
 
-    from django.shortcuts import render
     return render(request, template, {'path': path,
         'marker': marker,
         'marker_part': marker_part,
