@@ -179,6 +179,7 @@ class Settings(object):
         # Amazon Web Services S3 datastore settings.
         'CLOUD_BROWSER_AWS_ACCOUNT': Setting(from_env=True),
         'CLOUD_BROWSER_AWS_SECRET_KEY': Setting(from_env=True),
+        'CLOUD_BROWSER_AWS_HOST': Setting(),
 
         # Google Storage for Developers datastore settings.
         'CLOUD_BROWSER_GS_ACCOUNT': Setting(from_env=True),

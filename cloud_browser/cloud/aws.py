@@ -6,6 +6,7 @@
 
 .. _boto: http://code.google.com/p/boto/
 """
+from cloud_browser.app_settings import settings
 from cloud_browser.cloud import boto_base as base
 from cloud_browser.common import requires
 
@@ -56,11 +57,14 @@ class AwsConnection(base.BotoConnection):
     @requires(boto, 'boto')
     def _get_connection(self):
         """Return native connection object."""
-        # return boto.connect_s3(self.account, self.secret_key)
-        return boto.connect_s3(
-            aws_access_key_id=self.account,
-            aws_secret_access_key=self.secret_key,
-            host='s3.cn-north-1.amazonaws.com.cn',
-            is_secure=True,
-            calling_format='boto.s3.connection.OrdinaryCallingFormat'
-        )
+        if settings.CLOUD_BROWSER_AWS_HOST:
+            return boto.connect_s3(
+                aws_access_key_id=self.account,
+                aws_secret_access_key=self.secret_key,
+                host=settings.CLOUD_BROWSER_AWS_HOST
+            )
+        else:
+            return boto.connect_s3(
+                aws_access_key_id=self.account,
+                aws_secret_access_key=self.secret_key
+            )
