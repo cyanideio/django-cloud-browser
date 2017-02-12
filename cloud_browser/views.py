@@ -71,8 +71,8 @@ def browser(request, path='', template="cloud_browser/browser.html"):
 
     # Inputs.
     container_path, object_path = path_parts(path)
-    print container_path
-    print object_path
+    # print container_path
+    # print object_path
     incoming = request.POST or request.GET or {}
 
     marker = incoming.get('marker', None)
