@@ -103,6 +103,8 @@ def browser(request, path='', template="cloud_browser/browser.html"):
     marker_part = None
     container = None
     objects = None
+    request_at_root = request.path.split('/')[-1] == ''
+
     if container_path != '':
         # Find marked container from list.
         def cont_eq(container):
@@ -122,7 +124,8 @@ def browser(request, path='', template="cloud_browser/browser.html"):
             marker = objects[-1].name
             marker_part = relpath(marker, object_path)
 
-    return render(request, template, {'path': path,
+    return render(request, template, {
+        'path': path,
         'marker': marker,
         'marker_part': marker_part,
         'limit': limit,
@@ -131,7 +134,9 @@ def browser(request, path='', template="cloud_browser/browser.html"):
         'containers': containers,
         'container': container,
         'object_path': object_path,
-        'objects': objects})
+        'objects': objects,
+        'request_at_root': request_at_root
+    })
 
 @settings_view_decorator
 def document(_, path=''):

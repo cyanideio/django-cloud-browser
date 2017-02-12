@@ -8,6 +8,8 @@
 
 {% block cloud_browser_content %}
 <div id="cloud-browser-all" class="cloud-browser-defaults">
+
+{% if request_at_root %}
 <div id="cloud-browser-containers">
 <h2>Containers</h2>
 <ul>
@@ -23,9 +25,9 @@
 {% endfor %}
 </ul>
 </div>
+{% endif %}
 
-<div id="cloud-browser-objects">
-<h2>Objects</h2>
+<div id="cloud-browser-objects" {% if not request_at_root %} style="margin-left: 0" {% endif %}  >
 {% if objects %}
 <table id="cloud-browser-objects-table">
   <thead>
